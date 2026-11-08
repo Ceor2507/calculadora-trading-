@@ -44,11 +44,11 @@
 
     <!-- Main Content -->
     <main class="flex-grow max-w-4xl mx-auto px-4 py-8 w-full">
-        <div class="bg-dark-800 border border-dark-700 rounded-xl p-6 shadow-xl">
-            <h1 class="text-2xl font-bold mb-2 text-center">Calculadora de Lote y Riesgo</h1>
-            <p class="text-muted mb-6 text-center">Gestiona el riesgo de tus operaciones de forma profesional.</p>
+        <div class="bg-dark-800 border border-dark-700 rounded-xl p-6 shadow-xl mb-6">
+            <h1 class="text-2xl font-bold mb-2 text-center">Calculadora de Lote y Gestión de Riesgo</h1>
+            <p class="text-muted mb-6 text-center">Herramienta profesional para optimizar tus operaciones de trading.</p>
             
-            <div class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm text-muted mb-1">Capital de la Cuenta ($)</label>
                     <input type="number" id="capital" value="1000" class="w-full bg-dark-900 border border-dark-700 rounded-lg p-3 text-white focus:border-accent outline-none">
@@ -57,11 +57,27 @@
                     <label class="block text-sm text-muted mb-1">Riesgo por Operación (%)</label>
                     <input type="number" id="risk" value="1" class="w-full bg-dark-900 border border-dark-700 rounded-lg p-3 text-white focus:border-accent outline-none">
                 </div>
-                <div class="p-4 bg-dark-900 rounded-lg border border-dark-700 text-center mt-6">
-                    <p class="text-sm text-muted">Cantidad a Arriesgar:</p>
-                    <p id="result" class="text-3xl font-bold text-accent mt-1">$10.00</p>
+                <div>
+                    <label class="block text-sm text-muted mb-1">Precio de Entrada</label>
+                    <input type="number" id="entry" value="1.0850" class="w-full bg-dark-900 border border-dark-700 rounded-lg p-3 text-white focus:border-accent outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm text-muted mb-1">Stop Loss (Pips / Puntos)</label>
+                    <input type="number" id="sl" value="20" class="w-full bg-dark-900 border border-dark-700 rounded-lg p-3 text-white focus:border-accent outline-none">
                 </div>
             </div>
+
+            <div class="p-4 bg-dark-900 rounded-lg border border-dark-700 text-center mt-6">
+                <p class="text-sm text-muted">Cantidad Máxima a Arriesgar:</p>
+                <p id="result" class="text-3xl font-bold text-accent mt-1">$10.00</p>
+            </div>
+        </div>
+
+        <!-- Affiliate Section -->
+        <div class="bg-dark-800 border border-dark-700 rounded-xl p-6 shadow-xl text-center">
+            <h2 class="text-xl font-bold mb-2">Plataformas Recomendadas</h2>
+            <p class="text-muted mb-4">Empieza a operar con las mejores condiciones del mercado.</p>
+            <a href="#" class="inline-block bg-accent text-dark-900 font-bold px-6 py-3 rounded-lg hover:opacity-90 transition">Crear Cuenta de Trading</a>
         </div>
     </main>
 
