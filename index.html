@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProTrade Tools | Calculadoras Financieras y de Trading</title>
+    
+    <!-- Integración de Tailwind CSS para estilos rápidos y responsivos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuración personalizada de colores para Tailwind (Tema Trading) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        trade: {
+                            dark: '#0B0E14',
+                            card: '#151A22',
+                            input: '#222A35',
+                            green: '#00FFA3',
+                            blue: '#00E1FF',
+                            red: '#FF3366',
+                            gray: '#8C9AAB'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos personalizados para animaciones y scroll */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0B0E14;
+            color: #FFFFFF;
+        }
+        
+        /* Estilo para los bloques de anuncios (Placeholders) */
+        .ad-placeholder {
+            background: repeating-linear-gradient(
+                45deg,
+                #151A22,
+                #151A22 10px,
+                #1c232e 10px,
+                #1c232e 20px
+            );
+            border: 1px dashed #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8C9AAB;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+        
+        .ad-placeholder:hover {
+            border-color: #00E1FF;
+            color: #00E1FF;
+        }
+
+        /* Dimensiones estándar de anuncios (IAB) */
+        .ad-leaderboard { width: 100%; height: 90px; max-width: 728px; margin: 0 auto; }
+        .ad-mrec { width: 100%; height: 250px; max-width: 300px; margin: 0 auto; }
+
+        /* Estilos para inputs personalizados */
+        input[type="number"], select {
+            color-scheme: dark;
+        }
+        
+        .tab-btn.active {
+            border-bottom: 2px solid #00E1FF;
+            color: #00E1FF;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header / Navbar -->
+    <header class="bg-trade-card border-b border-gray-800 py-4 shadow-md z-10">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded bg-gradient-to-br from-trade-blue to-trade-green flex items-center justify-center font-bold text-trade-dark">
+                    PT
+                </div>
+                <h1 class="text-xl font-bold tracking-tight">ProTrade <span class="text-trade-blue">Tools</span></h1>
+            </div>
+            <nav class="hidden md:block">
+                <span class="text-sm text-trade-gray">Herramientas gratuitas para inversores</span>
+            </nav>
+        </div>
+    </header>
+
+    <!-- AdSlot 1: Header / Top (Leaderboard) -->
+   <script>
+  atOptions = {
+    'key' : 'afb22706c3d6fd5d238fad44149bf8f3',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
+  };
+
+ 
+    
+
+    <!-- Contenido Principal -->
+    <main class="flex-grow max-w-6xl mx-auto w-full px-4 mb-10 flex flex-col lg:flex-row gap-8">
+        
+        <!-- Columna de Calculadoras (Izquierda) -->
+        <div class="flex-grow">
+            
+            <!-- Navegación por Pestañas (Tabs) -->
+            <div class="flex overflow-x-auto border-b border-gray-800 mb-6 pb-2 no-scrollbar">
+                <button onclick="switchTab('tab-compound')" id="btn-tab-compound" class="tab-btn active px-4 py-2 font-medium text-sm whitespace-nowrap transition-colors hover:text-trade-blue">Interés Compuesto</button>
+                <button onclick="switchTab('tab-position')" id="btn-tab-position" class="tab-btn px-4 py-2 font-medium text-trade-gray text-sm whitespace-nowrap transition-colors hover:text-trade-blue">Tamaño de Posición</button>
+                <button onclick="switchTab('tab-risk')" id="btn-tab-risk" class="tab-btn px-4 py-2 font-medium text-trade-gray text-sm whitespace-nowrap transition-colors hover:text-trade-blue">Riesgo / Beneficio</button>
+            </div>
+
+            <!-- Contenedor de Alertas (En lugar de window.alert) -->
+            <div id="alert-box" class="hidden mb-4 p-4 rounded-lg bg-trade-red/20 border border-trade-red text-trade-red text-sm">
+                <!-- El mensaje de error se inserta aquí -->
+            </div>
+
+            <!-- Calculadora 1: Interés Compuesto -->
+            <div id="tab-compound" class="calc-section block">
+                <div class="bg-trade-card p-6 rounded-2xl shadow-xl border border-gray-800">
+                    <h2 class="text-2xl font-bold mb-2">Calculadora de Interés Compuesto</h2>
+                    <p class="text-trade-gray text-sm mb-6">Proyecta el crecimiento de tu capital a largo plazo.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Inputs -->
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-trade-gray mb-1">Capital Inicial ($)</label>
+                                <input type="number" id="ci-principal" value="1000" class="w-full bg-trade-input border border-gray-700 rounded-lg px-4 py-2.5 focus:outline-none focus:border-trade-blue focus:ring-1 focus:ring-trade-blue transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-trade-gray mb-1">Aportación Mensual ($)</label>
+                                <input type="number" id="ci-addition" value="100" class="w-full bg-trade-input border border-gray-700 rounded-lg px-4 py-2.5 focus:outline-none focus:border-trade-blue focus:ring-1 focus:ring-trade-blue transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-trade-gray mb-1">Tasa de Interés Anual (%)</label>
+                                <input type="number" id="ci-rate" value="10" class="w-full bg-trade-input border border-gray-700 rounded-lg px-4 py-2.5 focus:outline-none focus:border-trade-blue focus:ring-1 focus:ring-trade-blue transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-trade-gray mb-1">Período (Años)</label>
+                                <input type="number" id="ci-years" value="10" class="w-full bg-trade-input border border-gray-700 rounded-lg px-4 py-2.5 focus:outline-none focus:border-trade-blue focus:ring-1 focus:ring-trade-blue transition-all">
+                            </div>
+                            <button onclick="calculateCompoundInterest()" class="w-full bg-gradient-to-r from-trade-blue to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-[1.02] shadow-lg shadow-trade-blue/20">
+                                Calcular Proyección
+                            </button>
+                        </div>
+                        
+                        <!-- Resultados -->
+                        <div class="bg-trade-input rounded-xl p-6 flex flex-col justify-center border border-gray-700">
+                            <h3 class="text-lg font-medium text-trade-gray mb-4">Balance Final Estimado</h3>
+                            <div class="text-4xl font-bold text-trade-green mb-4" id="ci-result-total">$0.00</div>
+                            
+                            <div class="space-y-3 pt-4 border-t border-gray-700">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-trade-gray">Total Invertido:</span>
+                                    <span id="ci-result-invested" class="font-medium">$0.00</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-trade-gray">Ganancia por Intereses:</span>
+                                    <span id="ci-result-interest" class="font-medium text-trade-green">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculadora 2: Tamaño de Posición (Forex/Índices) -->
+            <div id="tab-position" class="calc-section hidden">
+                <div class="bg-trade-card p-6 rounded-2xl shadow-xl border border-gray-800">
+                    <h2 class="text-2xl font-bold mb-2">Tamaño de Posición (Lotaje)</h2>
+                    <p class="text-trade-gray text-sm mb-6">Calcula el riesgo exacto por operación para proteger tu cuenta.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-trade-gray mb-1">Balance de la Cuenta ($)</label>
+                                <input type="number" id="ps-balance" value="5000" class="w-full bg-trade-input border border-gray-700 rounded-lg px-4 py-2.5 focus:outline-none focus:border-trade-blue transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-trade-gray mb-1">Riesgo (%)</label>
+                                <input type="number" id="ps-risk" value="1" step="0.1" class="w-full bg-trade-input border border-gray-700 rounded-lg px-4 py-2.5 focus:outline-none focus:border-trade-blue transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-trade-gray mb-1">Stop Loss (Pips / Puntos)</label>
+                                <input type="number" id="ps-sl" value="20" class="w-full bg-trade-input border border-gray-700 rounded-lg px-4 py-2.5 focus:outline-none focus:border-trade-blue transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-trade-gray mb-1">Valor por Pip/Punto Estándar ($)</label>
+                                <input type="number" id="ps-pip-value" value="10" placeholder="Ej: 10 para EURUSD" class="w-full bg-trade-input border border-gray-700 rounded-lg px-4 py-2.5 focus:outline-none focus:border-trade-blue transition-all">
+                            </div>
+                            <button onclick="calculatePositionSize()" class="w-full bg-gradient-to-r from-trade-blue to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-[1.02] shadow-lg shadow-trade-blue/20">
+                                Calcular Lotes
+                            </button>
+                        </div>
+                        
+                        <div class="bg-trade-input rounded-xl p-6 flex flex-col justify-center border border-gray-700">
+                            <h3 class="text-lg font-medium text-trade-gray mb-4">Tamaño Recomendado</h3>
+                            <div class="text-4xl font-bold text-trade-blue mb-2" id="ps-result-lots">0.00 <span class="text-xl">Lotes</span></div>
+                            <p class="text-sm text-trade-gray mb-4">Lotes estándar</p>
+                            
+                            <div class="space-y-3 pt-4 border-t border-gray-700">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-trade-gray">Dinero en Riesgo:</span>
+                                    <span id="ps-result-risk-money" class="font-medium text-trade-red">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculadora 3: Riesgo / Beneficio -->
+            <div id="tab-risk" class="calc-section hidden">
+                <div class="bg-trade-card p-6 rounded-2xl shadow-xl border border-gray-800">
+                    <h2 class="text-2xl font-bold mb-2">Ratio Riesgo/Beneficio (R:R)</h2>
+                    <p class="text-trade-gray text-sm mb-6">Evalúa si vale la pena tomar un trade antes de entrar.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-trade-gray mb-1">Tipo de Operación</label>
+                                <select id="rr-type" class="w-full bg-trade-input border border-gray-700 rounded-lg px-4 py-2.5 focus:outline-none focus:border-trade-blue transition-all text-white">
+                                    <option value="long">Compra (Long)</option>
+                                    <option value="short">Venta (Short)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-trade-gray mb-1">Precio de Entrada</label>
+                                <input type="number" id="rr-entry" step="0.0001" class="w-full bg-trade-input border border-gray-700 rounded-lg px-4 py-2.5 focus:outline-none focus:border-trade-blue transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-trade-gray mb-1">Precio de Stop Loss (SL)</label>
+                                <input type="number" id="rr-sl" step="0.0001" class="w-full bg-trade-input border border-gray-700 rounded-lg px-4 py-2.5 focus:outline-none focus:border-trade-red transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-trade-gray mb-1">Precio de Take Profit (TP)</label>
+                                <input type="number" id="rr-tp" step="0.0001" class="w-full bg-trade-input border border-gray-700 rounded-lg px-4 py-2.5 focus:outline-none focus:border-trade-green transition-all">
+                            </div>
+                            <button onclick="calculateRiskReward()" class="w-full bg-gradient-to-r from-trade-blue to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-[1.02] shadow-lg shadow-trade-blue/20">
+                                Analizar Trade
+                            </button>
+                        </div>
+                        
+                        <div class="bg-trade-input rounded-xl p-6 flex flex-col justify-center border border-gray-700">
+                            <h3 class="text-lg font-medium text-trade-gray mb-4">Ratio R:R Resultante</h3>
+                            <div class="text-4xl font-bold mb-4" id="rr-result-ratio">1 : 0.00</div>
+                            
+                            <div class="space-y-3 pt-4 border-t border-gray-700">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-trade-gray">Distancia a Riesgo (SL):</span>
+                                    <span id="rr-risk-dist" class="font-medium text-trade-red">0.00</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-trade-gray">Distancia a Beneficio (TP):</span>
+                                    <span id="rr-reward-dist" class="font-medium text-trade-green">0.00</span>
+                                </div>
+                                <div class="mt-4 p-3 bg-trade-card rounded text-sm text-center font-medium" id="rr-verdict">
+                                    --
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AdSlot 2: Middle Content (Banner) -->
+            <div class="w-full mt-8">
+                <div class="ad-placeholder ad-leaderboard rounded-lg">
+                    <span>Espacio Anuncio Medio (728x90) - Native/Banner</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Barra lateral (Sidebar) para anuncios cuadrados -->
+        <aside class="w-full lg:w-80 flex-shrink-0 space-y-6 hidden lg:block">
+            <div class="bg-trade-card p-6 rounded-2xl shadow-xl border border-gray-800">
+                <h3 class="text-lg font-bold mb-4 border-b border-gray-700 pb-2">Patrocinado</h3>
+                <!-- AdSlot 3: Sidebar (MREC) -->
+                <div class="ad-placeholder ad-mrec rounded-lg">
+                    <span class="text-center px-4">Anuncio Cuadrado (300x250)<br>Ideal Afiliados/Brokers</span>
+                </div>
+            </div>
+            
+            <div class="bg-trade-card p-6 rounded-2xl shadow-xl border border-gray-800">
+                <h3 class="text-sm font-bold text-trade-gray mb-2 uppercase tracking-wider">Aviso Legal</h3>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    El comercio de divisas, CFDs y criptomonedas conlleva un alto nivel de riesgo. Los resultados mostrados en estas calculadoras son netamente informativos y matemáticos, no constituyen asesoramiento financiero.
+                </p>
+            </div>
+        </aside>
+    </main>
+
+    <!-- AdSlot 4: Bottom / Mobile (MREC visible on mobile) -->
+    <div class="w-full py-6 px-4 lg:hidden">
+         <div class="ad-placeholder ad-mrec rounded-lg">
+            <span class="text-center px-4">Anuncio Cuadrado Móvil (300x250)</span>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-trade-card border-t border-gray-800 py-8 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-trade-gray text-sm">&copy; 2024 ProTrade Tools. Todos los derechos reservados.</p>
+            <p class="text-gray-500 text-xs mt-2">Plataforma creada para propósitos educativos y de cálculo rápido.</p>
+        </div>
+    </footer>
+
+    <!-- Lógica JavaScript (Vanilla) -->
+    <script>
+        // Función para mostrar errores en la interfaz (reemplazo de alert)
+        function showError(message) {
+            const alertBox = document.getElementById('alert-box');
+            alertBox.textContent = message;
+            alertBox.classList.remove('hidden');
+            setTimeout(() => {
+                alertBox.classList.add('hidden');
+            }, 4000);
+        }
+
+        // Función para cambiar entre pestañas
+        function switchTab(tabId) {
+            try {
+                // Ocultar todas las secciones
+                document.querySelectorAll('.calc-section').forEach(el => el.classList.add('hidden'));
+                // Quitar clase activa de todos los botones
+                document.querySelectorAll('.tab-btn').forEach(el => {
+                    el.classList.remove('active', 'text-trade-blue');
+                    el.classList.add('text-trade-gray');
+                });
+                
+                // Mostrar la sección seleccionada
+                document.getElementById(tabId).classList.remove('hidden');
+                document.getElementById(tabId).classList.add('block');
+                
+                // Activar el botón correspondiente
+                const btn = document.getElementById(`btn-${tabId}`);
+                btn.classList.add('active', 'text-trade-blue');
+                btn.classList.remove('text-trade-gray');
+            } catch (error) {
+                console.error("Error cambiando pestaña:", error);
+            }
+        }
+
+        // Formateador de moneda USD
+        const currencyFormatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+        });
+
+        // 1. Lógica Interés Compuesto
+        function calculateCompoundInterest() {
+            try {
+                const principal = parseFloat(document.getElementById('ci-principal').value);
+                const monthlyAddition = parseFloat(document.getElementById('ci-addition').value);
+                const annualRate = parseFloat(document.getElementById('ci-rate').value) / 100;
+                const years = parseFloat(document.getElementById('ci-years').value);
+
+                if (isNaN(principal) || isNaN(monthlyAddition) || isNaN(annualRate) || isNaN(years) || years <= 0) {
+                    showError("Por favor ingresa valores numéricos válidos mayores a cero.");
+                    return;
+                }
+
+                const months = years * 12;
+                const monthlyRate = annualRate / 12;
+                let futureValue = principal;
+                let totalInvested = principal;
+
+                // Cálculo mes a mes para precisión con aportes
+                for (let i = 0; i < months; i++) {
+                    futureValue = (futureValue + monthlyAddition) * (1 + monthlyRate);
+                    totalInvested += monthlyAddition;
+                }
+
+                const totalInterest = futureValue - totalInvested;
+
+                // Actualizar UI
+                document.getElementById('ci-result-total').textContent = currencyFormatter.format(futureValue);
+                document.getElementById('ci-result-invested').textContent = currencyFormatter.format(totalInvested);
+                document.getElementById('ci-result-interest').textContent = currencyFormatter.format(totalInterest);
+            } catch (error) {
+                showError("Ocurrió un error en el cálculo.");
+            }
+        }
+
+        // 2. Lógica Tamaño de Posición
+        function calculatePositionSize() {
+            try {
+                const balance = parseFloat(document.getElementById('ps-balance').value);
+                const riskPct = parseFloat(document.getElementById('ps-risk').value);
+                const slPips = parseFloat(document.getElementById('ps-sl').value);
+                const pipValue = parseFloat(document.getElementById('ps-pip-value').value);
+
+                if (isNaN(balance) || isNaN(riskPct) || isNaN(slPips) || isNaN(pipValue) || slPips <= 0 || pipValue <= 0) {
+                    showError("Revisa que todos los campos sean números positivos y SL/Pip Value > 0.");
+                    return;
+                }
+
+                // Riesgo en Dinero = Balance * (Porcentaje / 100)
+                const riskMoney = balance * (riskPct / 100);
+                
+                // Valor por pip requerido = Riesgo / Pips de SL
+                const requiredPipValue = riskMoney / slPips;
+                
+                // Lotes = Valor requerido / Valor de 1 lote estándar
+                const lots = requiredPipValue / pipValue;
+
+                // Actualizar UI
+                document.getElementById('ps-result-lots').innerHTML = `${lots.toFixed(2)} <span class="text-xl">Lotes</span>`;
+                document.getElementById('ps-result-risk-money').textContent = currencyFormatter.format(riskMoney);
+            } catch (error) {
+                showError("Ocurrió un error calculando el lotaje.");
+            }
+        }
+
+        // 3. Lógica Riesgo / Beneficio
+        function calculateRiskReward() {
+            try {
+                const type = document.getElementById('rr-type').value;
+                const entry = parseFloat(document.getElementById('rr-entry').value);
+                const sl = parseFloat(document.getElementById('rr-sl').value);
+                const tp = parseFloat(document.getElementById('rr-tp').value);
+
+                if (isNaN(entry) || isNaN(sl) || isNaN(tp)) {
+                    showError("Ingresa precios de entrada, SL y TP válidos.");
+                    return;
+                }
+
+                let risk, reward;
+
+                if (type === 'long') {
+                    if (sl >= entry || tp <= entry) {
+                        showError("Para Compras (Long): SL debe ser menor a la Entrada, y TP mayor a la Entrada.");
+                        return;
+                    }
+                    risk = entry - sl;
+                    reward = tp - entry;
+                } else { // short
+                    if (sl <= entry || tp >= entry) {
+                        showError("Para Ventas (Short): SL debe ser mayor a la Entrada, y TP menor a la Entrada.");
+                        return;
+                    }
+                    risk = sl - entry;
+                    reward = entry - tp;
+                }
+
+                const ratio = reward / risk;
+
+                // UI Updates
+                const ratioEl = document.getElementById('rr-result-ratio');
+                ratioEl.textContent = `1 : ${ratio.toFixed(2)}`;
+                
+                // Colorear el ratio dependiendo de si es bueno (> 1.5) o malo
+                if (ratio >= 2) {
+                    ratioEl.className = "text-4xl font-bold mb-4 text-trade-green";
+                } else if (ratio >= 1) {
+                    ratioEl.className = "text-4xl font-bold mb-4 text-white";
+                } else {
+                    ratioEl.className = "text-4xl font-bold mb-4 text-trade-red";
+                }
+
+                document.getElementById('rr-risk-dist').textContent = risk.toFixed(4);
+                document.getElementById('rr-reward-dist').textContent = reward.toFixed(4);
+
+                // Veredicto
+                const verdictEl = document.getElementById('rr-verdict');
+                if (ratio >= 2) {
+                    verdictEl.textContent = "Trade Óptimo (R:R > 1:2)";
+                    verdictEl.className = "mt-4 p-3 bg-trade-green/10 text-trade-green border border-trade-green/30 rounded text-sm text-center font-medium";
+                } else if (ratio >= 1) {
+                    verdictEl.textContent = "Trade Aceptable (R:R > 1:1)";
+                    verdictEl.className = "mt-4 p-3 bg-gray-800 text-white border border-gray-600 rounded text-sm text-center font-medium";
+                } else {
+                    verdictEl.textContent = "Trade Peligroso (Riesgas más de lo que ganas)";
+                    verdictEl.className = "mt-4 p-3 bg-trade-red/10 text-trade-red border border-trade-red/30 rounded text-sm text-center font-medium";
+                }
+
+            } catch (error) {
+                showError("Ocurrió un error evaluando el riesgo/beneficio.");
+            }
+        }
+
+        // Ejecutar los cálculos iniciales al cargar la página para mostrar datos de ejemplo
+        window.onload = function() {
+            calculateCompoundInterest();
+            calculatePositionSize();
+            // Para el R:R, llenamos unos datos default para que no esté vacío al inicio
+            document.getElementById('rr-entry').value = "1.1050";
+            document.getElementById('rr-sl').value = "1.1000";
+            document.getElementById('rr-tp').value = "1.1200";
+            calculateRiskReward();
+        };
+    </script>
+</body>
+</html>
